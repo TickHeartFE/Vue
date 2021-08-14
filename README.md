@@ -1,2 +1,2 @@
 # Vue
-This is Vue Projec and LearnProcess
+This is Vue Project and LearnProcess
