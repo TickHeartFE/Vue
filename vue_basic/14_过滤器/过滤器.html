@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>过滤器</title>
+		<script type="text/javascript" src="../js/vue.js"></script>
+		<script type="text/javascript" src="../js/dayjs.min.js"></script>
+	</head>
+	<body>
+		<!-- 
+			过滤器：
+				定义：对要显示的数据进行特定格式化后再显示（适用于一些简单逻辑的处理）。
+				语法：
+						1.注册过滤器：Vue.filter(name,callback) 或 new Vue{filters:{}}
+						2.使用过滤器：{{ xxx | 过滤器名}}  或  v-bind:属性 = "xxx | 过滤器名"
+				备注：
+						1.过滤器也可以接收额外参数、多个过滤器也可以串联
+						2.并没有改变原本的数据, 是产生新的对应的数据
+		-->
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2>显示格式化后的时间</h2>
+			<!-- 计算属性实现 -->
+			<h3>现在是：{{fmtTime}}</h3>
+			<!-- methods实现 -->
+			<h3>现在是：{{getFmtTime()}}</h3>
+			<!-- 过滤器实现 -->
+			<h3>现在是：{{time | timeFormater}}</h3>
+			<!-- 过滤器实现（传参） -->
+			<h3>现在是：{{time | timeFormater('YYYY_MM_DD') | mySlice}}</h3>  <!-- 多重过滤器的实现 -->	
+			<h3 :x="msg | mySlice">尚硅谷</h3>
+			<h1>Test:{{num | letterUpper}}</h1>
+			<h2>TestAdd:{{num | numAdd}}</h2>
+			<h3>TestSlice4:{{msg_test | mySlice}}</h3>
+			<h3>TestSlice10:{{msg_test | mySliceTwo}}</h3>
+		</div>
+
+		<div id="root2">
+			<h2>{{msg | mySlice}}</h2>
+		</div>
+		<div id="root3">
+			<h2> {{msg | mySliceTwo}} </h2>
+		</div> 
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false
+		//全局过滤器
+		//Vue.filter属于全局过滤器 所有Vue组件都可以进行使用
+		Vue.filter('mySlice',value => {return value.slice(0,4)})
+		Vue.filter('mySliceTwo',value => {return value.slice(0,10)})
+		new Vue({
+			el:'#root',
+			data:{
+				time:1621561377603, //时间戳
+				msg:'你好，尚硅谷',
+				msg_test:'发展比较快暴露的问题更集中一些(相比于其他来学校 这些问题都是的暴露经历的时间更长)。类比中国这三十年的快速发展，在国际上被喷的更多。用发展眼光看，新兴事业的发展与创建是曲折的，但替代老的是必然的(如果老的无法做出同等体量改革)',
+				num:10,
+			},
+			computed: {
+				fmtTime(){
+					return dayjs(this.time).format('YYYY年MM月DD日 HH:mm:ss')
+				}
+			},
+			methods: {
+				getFmtTime(){
+					return dayjs(this.time).format('YYYY年MM月DD日 HH:mm:ss')
+				}
+			},
+			//局部过滤器
+			filters:{
+				timeFormater(value,str='YYYY年MM月DD日 HH:mm:ss'){
+					// console.log('@',value)
+					return dayjs(value).format(str)
+				},
+				letterUpper(value){
+					return value*10
+				},
+				numAdd(value){
+					return value+88
+				}
+			}
+		})
+
+		new Vue({
+			el:'#root2',
+			data:{
+				msg:'hello,atguigu!'
+			}
+		})
+
+		new Vue({
+			el:'#root3',
+			data:{
+				msg:'This is The Test For Arrow!'
+			}
+		})
+	</script>
+</html>
